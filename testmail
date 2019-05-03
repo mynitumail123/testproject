@@ -1,17 +1,13 @@
-package com.aetna.chs.marketingdam.workflow.processes;
+package org.myproject.sample.core.servlets;
 
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Session;
-import javax.jcr.Value;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.mail.Email;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.jackrabbit.api.security.user.Authorizable;
@@ -37,7 +33,7 @@ import com.day.cq.mailer.MailService;
 //MessageServiceGateway API
 import com.day.cq.mailer.MessageGateway;
 import com.day.cq.mailer.MessageGatewayService;
-import com.google.common.base.Splitter;
+import com.day.cq.mcm.emailprovider.types.Email;
 
 
 @Component(service = WorkflowProcess.class, property = {
@@ -56,6 +52,13 @@ public class SendCustomEmailProcess implements WorkflowProcess  {
 	@Reference
 	MailService mailService;
 	
+	public static final MAIL_MESSAGE = "message";
+	public static final ASSET_STATUS = "assetStatus";
+	public static final MAIL_SUBJECT = "subject";
+	public static final INITIATOR_EMAIL = "initiator"; 
+	public static final TEMPLATE_PATH = "templatePath";
+	public static final FROM_EMAIL = "anonymous@aetna.com";
+	
 	
 	@Override
 	public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) throws WorkflowException {
@@ -72,40 +75,27 @@ public class SendCustomEmailProcess implements WorkflowProcess  {
 		try {
 			resourceResolver = this.getResourceResolver(workflowSession.adaptTo(Session.class));
 			
-			String[] args = buildArguments(processArguments);
-
-			String msg = getValueFromArgs("message", args);
-			String emailSubject =  getValueFromArgs("subject", args);
-			String assetStatus = getValueFromArgs("assetStatus", args);
-			String emailTemplatePath = getValueFromArgs("templatePath", args);
-	        
-			UserManager manager = resourceResolver.adaptTo(UserManager.class);
-	    	Authorizable authorizable = manager.getAuthorizable(workItem.getWorkflow().getInitiator());
-	    	String emailAdd = authorizable.getProperty("./profile/email")[0].getString();
-	    	
-	    	LOGGER.info("Message value --> "  +msg);
-	    	LOGGER.info("Subject value --> "  +emailSubject);
-	    	LOGGER.info("emailVal value --> "  +emailAdd);
-	    	
-	    	Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("assetStatus", assetStatus);
-			parameters.put("initiator", emailAdd);
-			parameters.put("subject", emailSubject);
-			parameters.put("message", msg);
+			if(processArguments.containsKey("PROCESS_ARGS")){
 			
-	    	
-		    //send simple mail test
-	/*    	email.addTo(emailAdd);
-	        email.setSubject(emailSubject);
-	        email.setMsg(msg);
-	        email.setFrom("anonymous@aetna.com");
-	        emailService = messageGatewayService.getGateway(Email.class);
-	        emailService.send( (Email)email);
-	        */
-	        // test end
-	        
-	        //html email template
-	        sendEmail(workflowSession.adaptTo(Session.class), parameters, emailAdd, emailService, emailTemplatePath);
+					String[] args = buildArguments(processArguments);
+		
+					String msg = getValueFromArgs("message", args);
+					String emailSubject =  getValueFromArgs("subject", args);
+					String assetStatus = getValueFromArgs("assetStatus", args);
+					String emailTemplatePath = getValueFromArgs("templatePath", args);
+			        
+					UserManager manager = resourceResolver.adaptTo(UserManager.class);
+			    	Authorizable authorizable = manager.getAuthorizable(workItem.getWorkflow().getInitiator());
+			    	String emailAdd = authorizable.getProperty("./profile/email")[0].getString();
+			    	
+			     	Map<String, String> parameters = new HashMap<String, String>();
+					parameters.put("assetStatus", assetStatus);
+					parameters.put("initiator", emailAdd);
+					parameters.put("subject", emailSubject);
+					parameters.put("message", msg);
+			
+			sendEmail(workflowSession.adaptTo(Session.class), parameters, emailAdd, emailService, emailTemplatePath);
+			}
 	        
 	    	
 		}catch (Exception e) {
@@ -116,29 +106,16 @@ public class SendCustomEmailProcess implements WorkflowProcess  {
 	}
 	
 	
-//	 private String getEmailTemplate(MetaDataMap workflowMetaDataMap, WorkflowSession session) {
-//	        String template = workflowMetaDataMap.get("template", String.class);
-//	        if (template == null) {
-//	            // load mail template
-//	            String templatePath = workflowMetaDataMap.get("PROCESS_ARGS", String.class);
-//	            //log.info("templatePath***************"+templatePath);
-//	            template = loadTemplate(session.getSession(), templatePath);
-//	        }
-//	      //  log.debug("Loaded template: {}", template);
-//	        return template;
-//	    }
-//	
-	
 	private boolean sendEmail (Session session,Map<String, String> parameters, String recipeintAdd, MessageGateway<Email> emailService, String emailTemplatePath) {
 		boolean sendSuccess = false;
 		try {
-			//String emailTemplatePath = "/etc/notification/email/asset-status/asset-status-email.txt";
 			
 			final MailTemplate mailTemplate = MailTemplate.create(emailTemplatePath, session);
 			final HtmlEmail email = mailTemplate.getEmail(StrLookup.mapLookup(parameters), HtmlEmail.class);
 			
 			email.addTo(recipeintAdd);
 			 email.setFrom("anonymous@aetna.com");
+			 email.setCharset(CharEncoding.UTF_8);
 			 emailService.send( (Email)email);
 			
 			LOGGER.info("Email send successfully");
@@ -158,12 +135,15 @@ public class SendCustomEmailProcess implements WorkflowProcess  {
      * @return String of the argument value or null if not found
      */
     protected String getValueFromArgs(String key, String[] arguments) {
+    	
+    	if(StringUtils.isNotEmpty(key)) {
         for (String str : arguments) {
             String trimmedStr = str.trim();
             if (trimmedStr.startsWith(key + "=")) {
                 return trimmedStr.substring((key + "=").length());
             }
         }
+    	}
         return null;
     }
     
@@ -195,23 +175,5 @@ public class SendCustomEmailProcess implements WorkflowProcess  {
 	}
 
 	
-	/*
-	 * UserManager manager = resourceResolver.adaptTo(UserManager.class);
-    	Authorizable authorizable = manager.getAuthorizable(workItem.getWorkflow().getInitiator());
-    	Value[] email = authorizable.getProperty("./profile/email");
-    	
-    	=========================================================================================
-    	
-    	HtmlEmail email = new HtmlEmail();
-            email.setCharset(CharEncoding.UTF_8);
-            email.addTo(userEmail);
-            email.setSubject("test email subject");
-            email.setMsg("text email body");
-            email.setHtmlMsg("<!DOCTYPE html><html><head></head><body><p>html email body</p></body></html>");
-            messageGateway.send(email);
-    	
-    	
-    	
-    */
-
+	
 }
