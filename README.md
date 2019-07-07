@@ -33,3 +33,5 @@ ContentSync Console: /libs/cq/contentsync/content/console.html
 Latest entries from error.log: 
 http://localhost:4502/system/console/slinglog/tailer.txt?tail=1000&grep=*&name=%2Flogs%2Ferror.log
 Information about your AEM instance including its version: http://localhost:4502/system/console/status-productinfo
+
+https://github.com/arunsadhasivam3/AEM6.3/blob/master/DispatcherIssues/ModRewriteRule.md
