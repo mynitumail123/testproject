@@ -37,3 +37,6 @@ Information about your AEM instance including its version: http://localhost:4502
 https://github.com/arunsadhasivam3/AEM6.3/blob/master/DispatcherIssues/ModRewriteRule.md
 
 https://social.technet.microsoft.com/wiki/contents/articles/5392.active-directory-ldap-syntax-filters.aspx
+
+AEM JAVA CLASS Compilation issues 
+https://helpx.adobe.com/experience-manager/kb/Compilation-classloading-errors-custom-application.html
