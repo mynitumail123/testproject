@@ -1,0 +1,13 @@
+## Query with Property Not exists, with Relative Date Range, 
+
+http://localhost:4502/libs/cq/search/content/querydebug.html?_charset_=UTF-8&query=path%3D%2Fcontent%2Fdam%2Faetna%0D%0Atype%3Ddam%3AAsset%0D%0A1_property%3D%40jcr%3Acontent%2Fmetadata%2Faetna%3AsystemIntegrations%0D%0A1_property.value%3Daprimo_adam%0D%0A2_property%3D%40jcr%3Acontent%2Fmetadata%2Faetna%3AaprimoResourceId%0D%0A2_property.operation%3Dexists%0D%0A2_property.value%3Dfalse%0D%0Arelativedaterange.property%3D%40jcr%3Acontent%2Fjcr%3AlastModified%0D%0Arelativedaterange.lowerBound%3D-7d
+
+path=/content/dam/aetna
+type=dam:Asset
+1_property=@jcr:content/metadata/aetna:systemIntegrations
+1_property.value=aprimo_adam
+2_property=@jcr:content/metadata/aetna:aprimoResourceId
+2_property.operation=exists
+2_property.value=false
+relativedaterange.property=@jcr:content/jcr:lastModified
+relativedaterange.lowerBound=-7d
