@@ -1,3 +1,5 @@
+Asset Link Configuration - 
+http://aemconcepts.blogspot.com/2020/02/integrate-aem-with-creative-cloud-using.html
 Reference - 
 https://gist.github.com/kevinweber/b708a3923ecb17dad8841433459e94e0#file-built-in-tools-md
 
@@ -32,7 +34,8 @@ Error Log (w Tailing):
 ContentSync Console: /libs/cq/contentsync/content/console.html
 Latest entries from error.log: 
 http://localhost:4502/system/console/slinglog/tailer.txt?tail=1000&grep=*&name=%2Flogs%2Ferror.log
-Information about your AEM instance including its version: http://localhost:4502/system/console/status-productinfo
+Information about your AEM instance including its version: 
+http://localhost:4502/system/console/status-productinfo
 
 https://github.com/arunsadhasivam3/AEM6.3/blob/master/DispatcherIssues/ModRewriteRule.md
 
