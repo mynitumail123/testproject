@@ -1,5 +1,8 @@
 Asset Link Configuration - 
 http://aemconcepts.blogspot.com/2020/02/integrate-aem-with-creative-cloud-using.html
+
+Image Preview issue - 
+http://aemconcepts.blogspot.com/2020/02/dynamic-media-image-presets-preview-is.html
 Reference - 
 https://gist.github.com/kevinweber/b708a3923ecb17dad8841433459e94e0#file-built-in-tools-md
 
