@@ -33,6 +33,12 @@ http://coderstoolbox.net/string/#!encoding=url&action=decode&charset=utf_8
 CRX Change History: 
 /system/console/changehistory
 Error Log (w Tailing): 
+
+JUNIT - 
+Get Current Page inside title componetn
+
+https://github.com/bhimjipatel/blog/blob/9e7b7137b5a74c7390f11167724da8f322e95497/core/src/test/java/org/myorg/blog/core/models/TitleModelTest.java
+
 /bin/crxde/logs?tail=5000
 ContentSync Console: /libs/cq/contentsync/content/console.html
 Latest entries from error.log: 
